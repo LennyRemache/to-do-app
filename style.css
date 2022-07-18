@@ -6,3 +6,7 @@ body {
     color: whitesmoke;
     background-color: #333;
 }
+
+.item-container {
+    display: flex;
+}
