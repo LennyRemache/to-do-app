@@ -37,7 +37,7 @@ function renderTasks(taskList) {
     taskList.forEach(task => {
         allTasks += `
             <div class="item-container">
-                <li>${task}</li>
+                <li class="list-item">${task}</li>
                 <button class="del-btn">X</button>  
             </div>
         `;
@@ -45,23 +45,47 @@ function renderTasks(taskList) {
     list.innerHTML = allTasks;
     // store tasks in local storage to keep data on refresh
     localStorage.setItem("myTasks", JSON.stringify(taskList));
-    // spread operator changes nodeList to array of elements
+    // [...]spread operator inside array changes nodeList to array of elements
     // select all button elements that have an id that start with del-btn-
     //delBtns = [...document.querySelectorAll("button[id^=del-btn-]")];
 
     const delBtns = [...document.querySelectorAll(".del-btn")];
-
+    const listItems = [...document.querySelectorAll(".list-item")]
     // console.log([...delBtn][0].getAttribute('id'));
 
     // addEventListeners to each <li> tag's accompanying delete <button>
     // in order to provide a deleting functionality to each task
     delBtns.forEach((btn, i) => {
         btn.addEventListener("click", () => {
-            console.log(i);
+            //console.log(i);
             // splice() removes 1 element starting at index i
+            // when del button is clicked remove item from tasksList and rerender with new taskList
             taskList.splice(i, 1);
             //console.log(delBtns);
             renderTasks(taskList);
         });
     });
+
+    listItems.forEach(item => {
+        // item.addEventListener("mouseover", () => {
+        //     item.style.background = "rgb(215, 215, 215)";
+        // });
+        // item.addEventListener("mouseout", () => {
+        //     item.style.background = "inherit";
+        // });
+        item.addEventListener("click", () => {  
+            if (item.style.background === "rgb(162, 162, 162)") {
+                item.style.color = "black";
+                item.style.textDecoration = "none";
+                item.style.background = "inherit";
+            }
+            else {
+                item.style.color = "white";
+                item.style.textDecoration = "line-through";
+                item.style.background = "rgb(162, 162, 162)";
+            }
+            
+        })
+        
+    })
 };
