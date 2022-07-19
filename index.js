@@ -1,8 +1,17 @@
+/* TO-DO APP */
+
 let taskArr = [];
 let list = document.querySelector(".list");
 const userInput = document.querySelector(".user-input");
 const addBtn = document.querySelector(".add-btn");
-let delBtns = [];
+
+// if local storage contains array of tasks then we render them
+const tasksFromLocalStorage = JSON.parse(localStorage.getItem('myTasks'));
+if (tasksFromLocalStorage) {
+    //console.log(tasksFromLocalStorage);
+    taskArr = tasksFromLocalStorage;
+    renderTasks(taskArr);
+}
 
 addBtn.addEventListener("click", () => {
     const newTask = getTask(taskArr);
@@ -15,7 +24,7 @@ addBtn.addEventListener("click", () => {
     //console.log("I passed thru the val check!!");
     taskArr.push(newTask);
     userInput.value = "";
-    addTask(taskArr);
+    renderTasks(taskArr);
 });
 
 function getTask() {
@@ -23,7 +32,7 @@ function getTask() {
     return inputTask;
 };
 
-function addTask(taskList) {
+function renderTasks(taskList) {
     let allTasks = "";
     taskList.forEach(task => {
         allTasks += `
@@ -34,21 +43,25 @@ function addTask(taskList) {
         `;
     });
     list.innerHTML = allTasks;
+    // store tasks in local storage to keep data on refresh
+    localStorage.setItem("myTasks", JSON.stringify(taskList));
     // spread operator changes nodeList to array of elements
     // select all button elements that have an id that start with del-btn-
     //delBtns = [...document.querySelectorAll("button[id^=del-btn-]")];
 
-    delBtns = [...document.querySelectorAll(".del-btn")];
+    const delBtns = [...document.querySelectorAll(".del-btn")];
 
     // console.log([...delBtn][0].getAttribute('id'));
 
-    // delete task by removing from taskList and re-rendering rather than removing elements directly using document object methods
-    delBtns.forEach(btn => {
+    // addEventListeners to each <li> tag's accompanying delete <button>
+    // in order to provide a deleting functionality to each task
+    delBtns.forEach((btn, i) => {
         btn.addEventListener("click", () => {
-            const id = delBtns.indexOf(btn);
-            taskList.splice(id, 1);
-            addTask(taskList);
-            console.log(delBtns);
+            console.log(i);
+            // splice() removes 1 element starting at index i
+            taskList.splice(i, 1);
+            //console.log(delBtns);
+            renderTasks(taskList);
         });
     });
 };
